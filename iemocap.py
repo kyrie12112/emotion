@@ -13,14 +13,16 @@ def train_or_eval_graph_model(model, loss_function, dataloader,epoch,optimizer=N
     else:
         model.eval()
     seed_everything()
-    for data in dataloader:
+    for i, data in enumerate(dataloader):
         if train:
             optimizer.zero_grad()
         #
         textf1, textf2, textf3, textf4, visuf, acouf, qmask, umask, label = [d.cuda() for d in data[:-1]]
         lengths = [(umask[j] == 1).nonzero(as_tuple=False).tolist()[-1][0] + 1 for j in range(len(umask))]
         #
-        log_prob, e_i, e_n, e_t, e_l,loss_cl,loss_g = model([textf1, textf2, textf3, textf4], acouf, visuf,lengths, qmask,epoch,train)
+        log_prob, e_i, e_n, e_t, e_l, loss_cl, loss_g, _ = model(
+            [textf1, textf2, textf3, textf4], acouf, visuf, lengths,
+            qmask, epoch, i, train)
         label = torch.cat([label[j][:lengths[j]] for j in range(len(label))])
         loss = loss_function(log_prob, label)
 

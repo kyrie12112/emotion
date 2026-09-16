@@ -1,0 +1,24 @@
+# Local datasets and generated artifacts
+Dataset/
+show/
+runs/
+checkpoints/
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local recovery snapshots
+source_history/
+
+# Training logs
+events.out.tfevents.*
+*.log

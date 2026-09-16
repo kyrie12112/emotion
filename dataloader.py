@@ -23,17 +23,19 @@ class IEMOCAPDataset(Dataset):
 
     def __getitem__(self, index):
         vid = self.keys[index]
-        return torch.FloatTensor(numpy.array(self.roberta1[vid])),\
-               torch.FloatTensor(numpy.array(self.roberta2[vid])),\
-               torch.FloatTensor(numpy.array(self.roberta3[vid])),\
-               torch.FloatTensor(numpy.array(self.roberta4[vid])),\
-               torch.FloatTensor(numpy.array(self.videoVisual[vid])),\
-               torch.FloatTensor(numpy.array(self.videoAudio[vid])),\
-               torch.FloatTensor(numpy.array([[1,0] if x=='M' else [0,1] for x in\
-                                  self.videoSpeakers[vid]])),\
-               torch.FloatTensor(numpy.array([1]*len(self.videoLabels[vid]))),\
-               torch.LongTensor(numpy.array(self.videoLabels[vid])),\
-               vid
+        return (
+            torch.FloatTensor(numpy.array(self.roberta1[vid])),
+            torch.FloatTensor(numpy.array(self.roberta2[vid])),
+            torch.FloatTensor(numpy.array(self.roberta3[vid])),
+            torch.FloatTensor(numpy.array(self.roberta4[vid])),
+            torch.FloatTensor(numpy.array(self.videoVisual[vid])),
+            torch.FloatTensor(numpy.array(self.videoAudio[vid])),
+            torch.FloatTensor(numpy.array([[1, 0] if x == 'M' else [0, 1]
+                                           for x in self.videoSpeakers[vid]])),
+            torch.FloatTensor(numpy.array([1] * len(self.videoLabels[vid]))),
+            torch.LongTensor(numpy.array(self.videoLabels[vid])),
+            vid,
+        )
 
     def __len__(self):
         return self.len
@@ -119,6 +121,7 @@ def get_IEMOCAP_loaders(batch_size=32, valid=0.1, num_workers=2,pin_memory=False
     train_sampler, valid_sampler = get_train_valid_sampler(trainset, valid)
     train_loader = DataLoader(trainset,
                               batch_size=batch_size,
+                              sampler=train_sampler,
                               collate_fn=trainset.collate_fn,
                               num_workers=num_workers,
                               pin_memory=pin_memory,

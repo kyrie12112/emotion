@@ -74,16 +74,17 @@ class HyperGCN(nn.Module):
 
         # speaker
         if self.args.use_sp :
+            # qmask是？？？ 性别嵌入或者说话人嵌入
             qmask = torch.cat([qmask[:x, i, :] for i, x in enumerate(dia_len)], dim=0)  # (179,9) speaker-onehot
             spk_idx = torch.argmax(qmask, dim=-1)  #（354）--speaker
             spk_emb_vector = self.speaker_embeddings(spk_idx) # (354,512)
             # speaker
-            if self.speaker_cat_methd == 'fuse':
+            if self.speaker_cat_methd == 'fuse':  # 相加
                 l += spk_emb_vector
                 # a += spk_emb_vector
                 # v += spk_emb_vector
             else:
-                l = torch.cat([l,spk_emb_vector],dim=-1)
+                l = torch.cat([l, spk_emb_vector], dim=-1)  # 拼接
                 a = torch.cat([a, spk_emb_vector], dim=-1)
                 v = torch.cat([v, spk_emb_vector], dim=-1)
 

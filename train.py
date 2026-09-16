@@ -1,7 +1,7 @@
 from dataloader import get_IEMOCAP_loaders,get_MELD_loaders
 from utils import FocalLoss,seed_everything
 from torch.utils.tensorboard import SummaryWriter
-import numpy as np,time,torch,argparse
+import numpy as np,time,torch,argparse,os
 from sklearn.metrics import f1_score, confusion_matrix, accuracy_score, classification_report
 import torch.optim as optim
 from model import Model
@@ -179,6 +179,7 @@ if __name__ == '__main__':
     parser.add_argument('--num_layers', type=int, default=50, help='num_convs')
     parser.add_argument('--wd', default=0.00001, type=float)
     args = parser.parse_args()
+    os.makedirs('show', exist_ok=True)
     seed_everything()
     print(f"The configuration of this experiment is:{args}")
 
